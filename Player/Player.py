@@ -8,7 +8,15 @@ class Player():
         self.health = 100
         self.attack = 10
         self.armor = 0
+        self.level = 1
+        self.gold = 0
+        self.exp = 0
+        self.exp_to_level = 50
 
-    def attacks(self):
-        """Урон который будет наносить игрок"""
-        return random.randint(self.attack - int((self.attack * 0.1)),self.attack + int((self.attack * 0.1)))
+    def is_alive(self):
+        if self.health <= 0:
+            print("Вы погибли!")
+            return False
+        return True
+
+

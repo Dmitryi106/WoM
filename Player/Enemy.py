@@ -10,6 +10,3 @@ class Enemy():
         self.attack = 12
         self.armor = 0
 
-    def attacks(self):
-        """Урон который будет наносить враг"""
-        return random.randint(self.attack - int((self.attack * 0.1)), self.attack + int((self.attack * 0.1)))
