@@ -1,0 +1,41 @@
+{
+  "1": {
+    "name": "Человек",
+    "health": 600,
+    "attack": 55,
+    "armor": 4
+  },
+  "2": {
+    "name": "Эльф",
+    "health": 500,
+    "attack": 60,
+    "armor": 3,
+    "crit_chance": 0.15
+  },
+  "3": {
+    "name": "Орк",
+    "health": 700,
+    "attack": 70,
+    "armor": 5
+  },
+  "4": {
+    "name": "Маг",
+    "health": 400,
+    "attack": 90,
+    "armor": 2,
+    "spell_power": 80,
+    "crit_chance": 0.2
+  },
+  "5": {
+    "name": "Паладин",
+    "health": 650,
+    "attack": 50,
+    "armor": 6
+  },
+  "6": {
+    "name": "Лесной Страж",
+    "health": 520,
+    "attack": 58,
+    "armor": 3
+  }
+}

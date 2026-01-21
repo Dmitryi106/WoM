@@ -1,0 +1,174 @@
+{
+  "1": {
+    "name": "Гоблин",
+    "health": 150,
+    "attack": 30,
+    "armor": 1,
+    "level": 1,
+    "reward_exp": 25
+  },
+  "2": {
+    "name": "Скелет-воин",
+    "health": 200,
+    "attack": 35,
+    "armor": 2,
+    "level": 2,
+    "reward_exp": 40
+  },
+  "3": {
+    "name": "Волк",
+    "health": 120,
+    "attack": 40,
+    "armor": 1,
+    "level": 1,
+    "reward_exp": 30
+  },
+  "4": {
+    "name": "Тролль",
+    "health": 400,
+    "attack": 60,
+    "armor": 4,
+    "level": 5,
+    "reward_exp": 100
+  },
+  "5": {
+    "name": "Некромант",
+    "health": 180,
+    "attack": 70,
+    "armor": 1,
+    "level": 6,
+    "reward_exp": 120,
+    "spell_power": 65
+  },
+  "6": {
+    "name": "Огр",
+    "health": 500,
+    "attack": 80,
+    "armor": 5,
+    "level": 8,
+    "reward_exp": 180
+  },
+  "7": {
+    "name": "Лесной Паук",
+    "health": 90,
+    "attack": 45,
+    "armor": 1,
+    "level": 3,
+    "reward_exp": 35,
+    "poison_damage": 10
+  },
+  "8": {
+    "name": "Болотный Демон",
+    "health": 300,
+    "attack": 55,
+    "armor": 3,
+    "level": 7,
+    "reward_exp": 140
+  },
+  "9": {
+    "name": "Минотавр",
+    "health": 450,
+    "attack": 75,
+    "armor": 6,
+    "level": 9,
+    "reward_exp": 200
+  },
+  "10": {
+    "name": "Призрак",
+    "health": 200,
+    "attack": 50,
+    "armor": 0,
+    "level": 4,
+    "reward_exp": 90,
+    "dodge_chance": 0.2
+  },
+  "11": {
+    "name": "Химера",
+    "health": 380,
+    "attack": 68,
+    "armor": 4,
+    "level": 10,
+    "reward_exp": 220
+  },
+  "12": {
+    "name": "Каменный Страж",
+    "health": 600,
+    "attack": 45,
+    "armor": 8,
+    "level": 11,
+    "reward_exp": 250
+  },
+  "13": {
+    "name": "Огненный Элементаль",
+    "health": 320,
+    "attack": 75,
+    "armor": 2,
+    "level": 9,
+    "reward_exp": 210,
+    "fire_damage": 15
+  },
+  "14": {
+    "name": "Ледяной Дракон",
+    "health": 800,
+    "attack": 90,
+    "armor": 7,
+    "level": 15,
+    "reward_exp": 400,
+    "ice_damage": 20
+  },
+  "15": {
+    "name": "Темный Ассасин",
+    "health": 250,
+    "attack": 85,
+    "armor": 2,
+    "level": 10,
+    "reward_exp": 230,
+    "crit_chance": 0.3
+  },
+  "16": {
+    "name": "Гигантский Скорпион",
+    "health": 350,
+    "attack": 60,
+    "armor": 5,
+    "level": 8,
+    "reward_exp": 170,
+    "poison_damage": 25
+  },
+  "17": {
+    "name": "Кентавр-лучник",
+    "health": 280,
+    "attack": 50,
+    "armor": 2,
+    "level": 6,
+    "reward_exp": 130,
+    "range_attack": 40
+  },
+  "18": {
+    "name": "Мумия",
+    "health": 330,
+    "attack": 35,
+    "armor": 4,
+    "level": 7,
+    "reward_exp": 150,
+    "curse_damage": 10
+  },
+  "19": {
+    "name": "Бехолдер",
+    "health": 420,
+    "attack": 70,
+    "armor": 3,
+    "level": 12,
+    "reward_exp": 280,
+    "spell_power": 75,
+    "eye_laser": 20
+  },
+  "20": {
+    "name": "Анубис",
+    "health": 750,
+    "attack": 85,
+    "armor": 7,
+    "level": 14,
+    "reward_exp": 350,
+    "divine_damage": 15
+  }
+}
