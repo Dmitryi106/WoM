@@ -29,6 +29,47 @@ font_large = pygame.font.SysFont("Arial", 36, bold=True)
 font_medium = pygame.font.SysFont("Arial", 28)
 font_small = pygame.font.SysFont("Arial", 22)
 
+# Загрузка изображений
+ASSETS_PATH = "GameTron/WoM/assets"
+try:
+    player_img = pygame.image.load(f"{ASSETS_PATH}/player.png")
+    player_img = pygame.transform.scale(player_img, (150, 150))
+    print("✅ player.png загружен")
+except Exception as e:
+    print(f"❌ Не удалось загрузить player.png: {e}")
+    player_img = None
+
+try:
+    enemy_img = pygame.image.load(f"{ASSETS_PATH}/enemy.png")
+    enemy_img = pygame.transform.scale(enemy_img, (150, 150))
+    print("✅ enemy.png загружен")
+except Exception as e:
+    print(f"❌ Не удалось загрузить enemy.png: {e}")
+    enemy_img = None
+
+# Иконки (если есть)
+icons = {}
+try:
+    icons["health"] = pygame.image.load(f"{ASSETS_PATH}/icons/health.png")
+    icons["mana"] = pygame.image.load(f"{ASSETS_PATH}/icons/mana.png")
+    icons["exp"] = pygame.image.load(f"{ASSETS_PATH}/icons/exp.png")
+    icons["gold"] = pygame.image.load(f"{ASSETS_PATH}/icons/gold.png")
+    for k in icons:
+        icons[k] = pygame.transform.scale(icons[k], (24, 24))
+    print("✅ Все иконки загружены")
+except Exception as e:
+    print(f"❌ Не удалось загрузить иконки: {e}")
+    icons = {}
+try:
+    icons["health"] = pygame.image.load(f"{ASSETS_PATH}/icons/health.png")
+    icons["mana"] = pygame.image.load(f"{ASSETS_PATH}/icons/mana.png")
+    icons["exp"] = pygame.image.load(f"{ASSETS_PATH}/icons/exp.png")
+    icons["gold"] = pygame.image.load(f"{ASSETS_PATH}/icons/gold.png")
+    for k in icons:
+        icons[k] = pygame.transform.scale(icons[k], (24, 24))
+except:
+    icons = {}  # если нет — используем текст
+
 # Глобальные переменные
 player = None
 enemy = None
@@ -96,16 +137,39 @@ def draw_player_status():
     screen.blit(level_text, (x, y))
 
     # Золото
-    gold_text = font_small.render(f"Золото: {player.gold}", True, GOLD)
-    screen.blit(gold_text, (x, y + spacing))
+    if "gold" in icons:
+        screen.blit(icons["gold"], (x, y + spacing))
+        gold_text = font_small.render(f" {player.gold}", True, GOLD)
+        screen.blit(gold_text, (x + 30, y + spacing))
+    else:
+        gold_text = font_small.render(f"Золото: {player.gold}", True, GOLD)
+        screen.blit(gold_text, (x, y + spacing))
 
     # Мана
-    mana_text = font_small.render(f"Мана: {player.mana}/{player.max_mana}", True, (100, 200, 255))
-    screen.blit(mana_text, (x, y + spacing * 2))
+    if "mana" in icons:
+        screen.blit(icons["mana"], (x, y + spacing * 2))
+        mana_text = font_small.render(f" {player.mana}/{player.max_mana}", True, (100, 200, 255))
+        screen.blit(mana_text, (x + 30, y + spacing * 2))
+    else:
+        mana_text = font_small.render(f"Мана: {player.mana}/{player.max_mana}", True, (100, 200, 255))
+        screen.blit(mana_text, (x, y + spacing * 2))
 
     # Опыт
-    exp_text = font_small.render(f"Опыт: {player.exp}/{player.exp_to_next}", True, (100, 255, 100))
-    screen.blit(exp_text, (x, y + spacing * 3))
+    if "exp" in icons:
+        screen.blit(icons["exp"], (x, y + spacing * 3))
+        exp_text = font_small.render(f" {player.exp}/{player.exp_to_next}", True, (100, 255, 100))
+        screen.blit(exp_text, (x + 30, y + spacing * 3))
+    else:
+        exp_text = font_small.render(f"Опыт: {player.exp}/{player.exp_to_next}", True, (100, 255, 100))
+        screen.blit(exp_text, (x, y + spacing * 3))
+
+        # Полоса опыта
+    exp_bar_width = 180
+    exp_fill = (player.exp / player.exp_to_next) * exp_bar_width
+    exp_fill = max(exp_fill, 0)
+    pygame.draw.rect(screen, (50, 50, 50), (x, y + spacing * 3 + 25, exp_bar_width, 10))
+    pygame.draw.rect(screen, (100, 255, 100), (x, y + spacing * 3 + 25, exp_fill, 10))
+    pygame.draw.rect(screen, WHITE, (x, y + spacing * 3 + 25, exp_bar_width, 10), 1)
 
 # === Экран меню ===
 def draw_menu():
@@ -279,13 +343,19 @@ def main():
                         elif btn.action == "back":
                             game_state = "menu"
 # Обновление состояния
+        # Обновление состояния
         if battle and battle.is_finished():
             if return_to_menu_timer is None:
                 return_to_menu_timer = pygame.time.get_ticks()
             elif pygame.time.get_ticks() - return_to_menu_timer > RETURN_DELAY:
-                game_state = "menu"
-                if battle:
-                    battle.log_messages.append("Бой окончен. Возврат в меню...")
+                # Меняем состояние ТОЛЬКО если мы всё ещё в бою или в меню
+                if game_state in ["battle", "menu"]:
+                    game_state = "menu"
+                battle.log_messages.append("Бой окончен. Возврат в меню...")
+                return_to_menu_timer = None
+        else:
+            # Если бой неактивен, но мы НЕ в магазине — сбрасываем таймер
+            if game_state != "battle":
                 return_to_menu_timer = None
 
         # Отрисовка
@@ -333,6 +403,18 @@ def draw_battle():
     # Названия
     vs_text = font_large.render(f"{player.name} vs {enemy.name}", True, WHITE)
     screen.blit(vs_text, (WIDTH // 2 - vs_text.get_width() // 2, 20))
+
+    # Спрайт игрока
+    if player_img:
+        screen.blit(player_img, (50, 250))
+    else:
+        pygame.draw.rect(screen, (100, 100, 255), (50, 250, 150, 150))  # заглушка
+
+    # Спрайт врага
+    if enemy_img:
+        screen.blit(enemy_img, (WIDTH - 200, 250))
+    else:
+        pygame.draw.rect(screen, (255, 100, 100), (WIDTH - 200, 250, 150, 150))  # заглушка
 
     # Полосы здоровья
     draw_health_bar(50, 100, player.health, player.max_health, f"{player.name}")
