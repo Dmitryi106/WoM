@@ -1,6 +1,7 @@
 import pygame
 import sys
 import random
+import math
 from WoM.Player.Player import Player
 from WoM.Player.Enemy import Enemy
 from WoM.Battle.Battle import Battle
@@ -29,46 +30,93 @@ font_large = pygame.font.SysFont("Arial", 36, bold=True)
 font_medium = pygame.font.SysFont("Arial", 28)
 font_small = pygame.font.SysFont("Arial", 22)
 
+# === Создание иконок программно ===
+
+
+def create_icon_health():
+    surf = pygame.Surface((24, 24), pygame.SRCALPHA)
+    pygame.draw.circle(surf, RED, (8, 8), 8)
+    pygame.draw.circle(surf, RED, (16, 8), 8)
+    pygame.draw.polygon(surf, RED, [(4, 10), (20, 10), (12, 22)])
+    return surf
+
+def create_icon_mana():
+    surf = pygame.Surface((24, 24), pygame.SRCALPHA)
+    pygame.draw.ellipse(surf, (100, 100, 255), (6, 4, 12, 16))
+    pygame.draw.ellipse(surf, (200, 200, 255), (8, 6, 8, 12))
+    return surf
+
+def create_icon_exp():
+    surf = pygame.Surface((24, 24), pygame.SRCALPHA)
+    points = []
+    for i in range(5):
+        angle = 2.38 + i * 2 * 3.1415 / 5
+        x1 = 12 + 10 * math.cos(angle)
+        y1 = 12 + 10 * math.sin(angle)
+        points.append((x1, y1))
+        angle += 3.1415 / 5
+        x2 = 12 + 5 * math.cos(angle)
+        y2 = 12 + 5 * math.sin(angle)
+        points.append((x2, y2))
+    pygame.draw.polygon(surf, GOLD, points)
+    return surf
+
+def create_icon_gold():
+    surf = pygame.Surface((24, 24), pygame.SRCALPHA)
+    pygame.draw.circle(surf, GOLD, (12, 12), 10)
+    pygame.draw.circle(surf, (220, 180, 0), (12, 12), 6)
+    pygame.draw.circle(surf, GOLD, (12, 12), 3, 2)
+    return surf
+
+# Создаём иконки
+icons = {
+    "health": create_icon_health(),
+    "mana": create_icon_mana(),
+    "exp": create_icon_exp(),
+    "gold": create_icon_gold(),
+}
+
+print("✅ Иконки созданы программно!")
+
+# Заглушка: спрайт игрока
+player_img = pygame.Surface((150, 150), pygame.SRCALPHA)
+player_img.fill((0, 0, 0, 0))
+# Голова
+pygame.draw.circle(player_img, (220, 180, 140), (75, 60), 30)
+# Тело
+pygame.draw.rect(player_img, (70, 130, 180), (55, 90, 40, 60))  # кираса
+pygame.draw.line(player_img, (139, 69, 19), (55, 90), (30, 70), 8)  # левая рука
+pygame.draw.line(player_img, (139, 69, 19), (95, 90), (120, 70), 8)  # правая
+# Меч
+pygame.draw.rect(player_img, (200, 200, 200), (115, 60, 5, 40))
+pygame.draw.rect(player_img, (255, 215, 0), (113, 58, 9, 6))  # рукоять
+
+# Заглушка: спрайт врага
+enemy_img = pygame.Surface((150, 150), pygame.SRCALPHA)
+enemy_img.fill((0, 0, 0, 0))
+# Голова — злобная
+pygame.draw.circle(enemy_img, (100, 0, 0), (75, 60), 32)
+pygame.draw.rect(enemy_img, (50, 50, 50), (65, 45, 20, 8))  # брови
+pygame.draw.circle(enemy_img, BLACK, (65, 60), 8)  # глаз
+pygame.draw.circle(enemy_img, BLACK, (85, 60), 8)
+pygame.draw.arc(enemy_img, BLACK, (60, 70, 30, 20), 0, 3.14, 3)  # улыбка
+# Тело
+pygame.draw.polygon(enemy_img, (80, 0, 0), [(75, 90), (50, 140), (100, 140)])
+# Когти
+pygame.draw.polygon(enemy_img, (200, 0, 0), [(45, 130), (40, 140), (55, 135)])
+pygame.draw.polygon(enemy_img, (200, 0, 0), [(105, 130), (110, 140), (95, 135)])
+
 # Загрузка изображений
-ASSETS_PATH = "GameTron/WoM/assets"
-try:
-    player_img = pygame.image.load(f"{ASSETS_PATH}/player.png")
-    player_img = pygame.transform.scale(player_img, (150, 150))
-    print("✅ player.png загружен")
-except Exception as e:
-    print(f"❌ Не удалось загрузить player.png: {e}")
-    player_img = None
+ASSETS_PATH = "assets"
+# Шрифты
+font_large = pygame.font.SysFont("Arial", 36, bold=True)
+font_medium = pygame.font.SysFont("Arial", 28)
+font_small = pygame.font.SysFont("Arial", 22)
 
-try:
-    enemy_img = pygame.image.load(f"{ASSETS_PATH}/enemy.png")
-    enemy_img = pygame.transform.scale(enemy_img, (150, 150))
-    print("✅ enemy.png загружен")
-except Exception as e:
-    print(f"❌ Не удалось загрузить enemy.png: {e}")
-    enemy_img = None
+# Убираем зависимость от папки assets
+player_img = None
+enemy_img = None
 
-# Иконки (если есть)
-icons = {}
-try:
-    icons["health"] = pygame.image.load(f"{ASSETS_PATH}/icons/health.png")
-    icons["mana"] = pygame.image.load(f"{ASSETS_PATH}/icons/mana.png")
-    icons["exp"] = pygame.image.load(f"{ASSETS_PATH}/icons/exp.png")
-    icons["gold"] = pygame.image.load(f"{ASSETS_PATH}/icons/gold.png")
-    for k in icons:
-        icons[k] = pygame.transform.scale(icons[k], (24, 24))
-    print("✅ Все иконки загружены")
-except Exception as e:
-    print(f"❌ Не удалось загрузить иконки: {e}")
-    icons = {}
-try:
-    icons["health"] = pygame.image.load(f"{ASSETS_PATH}/icons/health.png")
-    icons["mana"] = pygame.image.load(f"{ASSETS_PATH}/icons/mana.png")
-    icons["exp"] = pygame.image.load(f"{ASSETS_PATH}/icons/exp.png")
-    icons["gold"] = pygame.image.load(f"{ASSETS_PATH}/icons/gold.png")
-    for k in icons:
-        icons[k] = pygame.transform.scale(icons[k], (24, 24))
-except:
-    icons = {}  # если нет — используем текст
 
 # Глобальные переменные
 player = None
@@ -404,29 +452,30 @@ def draw_battle():
     vs_text = font_large.render(f"{player.name} vs {enemy.name}", True, WHITE)
     screen.blit(vs_text, (WIDTH // 2 - vs_text.get_width() // 2, 20))
 
-    # Спрайт игрока
-    if player_img:
-        screen.blit(player_img, (50, 250))
-    else:
-        pygame.draw.rect(screen, (100, 100, 255), (50, 250, 150, 150))  # заглушка
-
-    # Спрайт врага
-    if enemy_img:
-        screen.blit(enemy_img, (WIDTH - 200, 250))
-    else:
-        pygame.draw.rect(screen, (255, 100, 100), (WIDTH - 200, 250, 150, 150))  # заглушка
-
-    # Полосы здоровья
+    # Полосы здоровья — чуть выше спрайтов
     draw_health_bar(50, 100, player.health, player.max_health, f"{player.name}")
     draw_health_bar(WIDTH - 250, 100, enemy.health, enemy.max_health, f"{enemy.name}")
 
-    # Статус игрока — рядом с его HP
+    # Спрайт игрока
+    if player_img:
+        screen.blit(player_img, (50, 250))  # слева
+    else:
+        pygame.draw.rect(screen, (100, 100, 255), (50, 250, 150, 150))
+
+    # Спрайт врага
+    if enemy_img:
+        screen.blit(enemy_img, (WIDTH - 200, 250))  # справа
+    else:
+        pygame.draw.rect(screen, (255, 100, 100), (WIDTH - 200, 250, 150, 150))
+
+    # Статус игрока
     draw_player_status()
 
-    # Кнопки действий
+    # Кнопки
     for btn in buttons:
         btn.draw(screen)
 
+    # Лог
     draw_log()
 
 
